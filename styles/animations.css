@@ -1,0 +1,12 @@
+/* Custom keyframe animations beyond Tailwind's built-ins.
+   Import into globals.css as needed: @import "./animations.css" */
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slide-in-right {
+  from { opacity: 0; transform: translateX(24px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
