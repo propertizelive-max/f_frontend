@@ -7,12 +7,16 @@ import { Button } from '@/components/ui/Button'
 import { Badge } from '@/components/ui/Badge'
 import { formatPrice } from '@/lib/utils'
 import { useCart } from '@/context/CartContext'
+import { useAuth } from '@/context/AuthContext'
+import { toast } from '@/hooks/useToast'
+import { extractApiErrorMessage } from '@/lib/api/error'
 import type { ProductDetail } from '@/types/product'
 import ProductImageGallery from './ProductImageGallery'
 import ProductColorSelector from './ProductColorSelector'
 import ProductVariantSelector from './ProductVariantSelector'
 import ProductQuantitySelector from './ProductQuantitySelector'
 import ProductTabs from './ProductTabs'
+import RelatedProducts from './RelatedProducts'
 
 type TabKey = 'specs' | 'overview' | 'care' | 'warranty'
 
@@ -23,11 +27,13 @@ type ProductDetailClientProps = {
 export default function ProductDetailClient({ product }: ProductDetailClientProps) {
   const router = useRouter()
   const { addItem } = useCart()
+  const { isAuthenticated, openAuthModal } = useAuth()
   const [selectedImage, setSelectedImage] = useState(0)
   const [selectedColor, setSelectedColor] = useState<string>(product.colors[0]?.id ?? '')
   const [selectedVariant, setSelectedVariant] = useState<string>(product.variants[0]?.id ?? '')
   const [quantity, setQuantity] = useState(1)
   const [activeTab, setActiveTab] = useState<TabKey>('specs')
+  const [addingToCart, setAddingToCart] = useState(false)
 
   const currentVariant = product.variants.find((v) => v.id === selectedVariant)
   const currentPrice = currentVariant?.priceOverride ?? product.price
@@ -45,21 +51,36 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
     if (color?.imageIndex != null) setSelectedImage(color.imageIndex)
   }
 
-  function handleAddToCart() {
+  async function doAddToCart() {
     const colorObj = product.colors.find((c) => c.id === selectedColor)
     const variantObj = product.variants.find((v) => v.id === selectedVariant)
-    addItem({
-      productId: product.id,
-      slug: product.slug,
-      name: product.name,
-      price: currentPrice,
-      originalPrice: product.originalPrice,
-      quantity,
-      image: product.images[0] ?? '',
-      color: colorObj?.name,
-      variant: variantObj?.label,
-    })
-    router.push('/checkout/cart')
+    setAddingToCart(true)
+    try {
+      await addItem({
+        productId: product.id,
+        slug: product.slug,
+        name: product.name,
+        price: currentPrice,
+        originalPrice: product.originalPrice,
+        quantity,
+        image: product.images[0] ?? '',
+        color: colorObj?.name,
+        variant: variantObj?.label,
+      })
+      router.push('/checkout/cart')
+    } catch (err) {
+      toast(extractApiErrorMessage(err), 'error')
+    } finally {
+      setAddingToCart(false)
+    }
+  }
+
+  function handleAddToCart() {
+    if (!isAuthenticated) {
+      openAuthModal(doAddToCart)
+      return
+    }
+    doAddToCart()
   }
 
   return (
@@ -169,11 +190,12 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
               variant="accent"
               size="lg"
               fullWidth
-              disabled={outOfStock}
+              disabled={outOfStock || addingToCart}
+              isLoading={addingToCart}
               onClick={handleAddToCart}
             >
               <ShoppingBag className="w-4 h-4 mr-2" />
-              Add to Cart
+              {addingToCart ? 'Adding...' : 'Add to Cart'}
             </Button>
             <Button
               variant="outline"
@@ -197,6 +219,17 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
         />
       </div>
 
+      {/* Related products from same category */}
+      {product.categoryId && (
+        <RelatedProducts
+          categoryId={product.categoryId}
+          currentProductId={product.id}
+          categoryName={product.category
+            ? product.category.charAt(0).toUpperCase() + product.category.slice(1).replace(/-/g, ' ')
+            : undefined}
+        />
+      )}
+
       {/* Sticky mobile CTA bar */}
       <div className="fixed bottom-0 left-0 right-0 md:hidden bg-cream border-t border-border px-6 py-3 z-40">
         <div className="flex items-center gap-3 max-w-lg mx-auto">
@@ -209,11 +242,12 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
             variant="accent"
             size="md"
             fullWidth
-            disabled={outOfStock}
+            disabled={outOfStock || addingToCart}
+            isLoading={addingToCart}
             onClick={handleAddToCart}
             className="flex-1"
           >
-            Add to Cart
+            {addingToCart ? 'Adding...' : 'Add to Cart'}
           </Button>
         </div>
       </div>

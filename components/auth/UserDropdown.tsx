@@ -2,15 +2,14 @@
 
 import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
 import { ChevronDown, User } from 'lucide-react'
 import { useAuth } from '@/context/AuthContext'
-import { logoutUser } from '@/services/authService'
+import { useLogout } from '@/features/auth/hooks/useLogout'
 import { toast } from '@/hooks/useToast'
 
 export function UserDropdown() {
-  const { user, logout } = useAuth()
-  const router = useRouter()
+  const { user } = useAuth()
+  const { logout } = useLogout()
   const [open, setOpen] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
 
@@ -24,12 +23,10 @@ export function UserDropdown() {
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
 
-  async function handleLogout() {
+  function handleLogout() {
     setOpen(false)
-    await logoutUser()
     logout()
     toast('Logged out successfully')
-    router.push('/')
   }
 
   const firstName = user?.name?.split(' ')[0] ?? 'Account'
@@ -42,9 +39,9 @@ export function UserDropdown() {
         aria-expanded={open}
         className="flex items-center gap-1.5 text-charcoal hover:text-accent transition-colors cursor-pointer"
       >
-        {user?.avatar ? (
+        {user?.picture ? (
           <img
-            src={user.avatar}
+            src={user.picture}
             alt={user.name}
             className="w-6 h-6 rounded-full object-cover"
           />

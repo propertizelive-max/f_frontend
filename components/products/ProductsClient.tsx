@@ -1,53 +1,67 @@
 'use client'
 
-import { useState, useRef, useMemo } from 'react'
+import { useState, useRef } from 'react'
+import { useSearchParams } from 'next/navigation'
 import { FilterBar } from '@/components/products/FilterBar'
 import { ProductGrid } from '@/components/products/ProductGrid'
 import { Pagination } from '@/components/products/Pagination'
-import { PRODUCTS } from '@/data/products'
+import { useProducts } from '@/features/products/hooks/useProducts'
+import { apiProductToCard } from '@/lib/mappers'
 import type { FilterState } from '@/types/filters'
 import { DEFAULT_FILTERS, PRICE_MAX_DEFAULT } from '@/types/filters'
+import type { ProductsQueryParams } from '@/features/products/services/products.api'
 
 const ITEMS_PER_PAGE = 9
 
+function buildApiParams(
+  filters: FilterState,
+  page: number,
+  categoryId?: string
+): ProductsQueryParams {
+  const params: ProductsQueryParams = { page, limit: ITEMS_PER_PAGE }
+
+  if (categoryId) {
+    params.categoryId = categoryId
+  }
+
+  if (filters.priceMax < PRICE_MAX_DEFAULT) {
+    params.maxPrice = filters.priceMax
+  }
+
+  switch (filters.sortBy) {
+    case 'price-asc':
+      params.sortBy = 'price'
+      params.order = 'ASC'
+      break
+    case 'price-desc':
+      params.sortBy = 'price'
+      params.order = 'DESC'
+      break
+    case 'newest':
+      params.sortBy = 'createdAt'
+      params.order = 'DESC'
+      break
+    default:
+      params.sortBy = 'createdAt'
+      params.order = 'DESC'
+  }
+
+  return params
+}
+
 export function ProductsClient() {
+  const searchParams = useSearchParams()
+  const categoryId = searchParams.get('categoryId') ?? undefined
+  const categoryName = searchParams.get('categoryName') ?? undefined
+
   const [filters, setFilters] = useState<FilterState>(DEFAULT_FILTERS)
   const [currentPage, setCurrentPage] = useState(1)
   const gridRef = useRef<HTMLDivElement>(null)
 
-  const filteredProducts = useMemo(() => {
-    let result = [...PRODUCTS]
+  const { data, isLoading } = useProducts(buildApiParams(filters, currentPage, categoryId))
 
-    if (filters.material.length > 0) {
-      result = result.filter((p) => filters.material.includes(p.material))
-    }
-    if (filters.size.length > 0) {
-      result = result.filter((p) => filters.size.includes(p.size))
-    }
-    if (filters.priceMax < PRICE_MAX_DEFAULT) {
-      result = result.filter((p) => p.priceNum <= filters.priceMax)
-    }
-
-    switch (filters.sortBy) {
-      case 'price-asc':
-        result.sort((a, b) => a.priceNum - b.priceNum)
-        break
-      case 'price-desc':
-        result.sort((a, b) => b.priceNum - a.priceNum)
-        break
-      case 'newest':
-        result.sort((a, b) => (b.isNew ? 1 : 0) - (a.isNew ? 1 : 0))
-        break
-    }
-
-    return result
-  }, [filters])
-
-  const totalPages = Math.ceil(filteredProducts.length / ITEMS_PER_PAGE)
-  const paginatedProducts = filteredProducts.slice(
-    (currentPage - 1) * ITEMS_PER_PAGE,
-    currentPage * ITEMS_PER_PAGE
-  )
+  const products = (data?.data ?? []).map(apiProductToCard)
+  const totalPages = data ? Math.ceil(data.total / ITEMS_PER_PAGE) : 0
 
   function handleFiltersChange(next: FilterState) {
     setFilters(next)
@@ -66,23 +80,37 @@ export function ProductsClient() {
 
   return (
     <>
+      {categoryName && (
+        <div className="max-w-[1440px] mx-auto px-6 lg:px-14 pt-10">
+          <p className="text-[10px] uppercase tracking-[0.3em] font-semibold text-accent mb-1">
+            Category
+          </p>
+          <h2 className="font-display text-3xl lg:text-4xl font-medium text-charcoal">
+            {categoryName}
+          </h2>
+        </div>
+      )}
+
       <FilterBar
         filters={filters}
         onChange={handleFiltersChange}
-        totalCount={filteredProducts.length}
+        totalCount={data?.total ?? 0}
       />
 
       <div ref={gridRef} className="scroll-mt-32">
         <div className="max-w-[1440px] mx-auto px-6 lg:px-14 py-12 lg:py-16">
           <ProductGrid
-            products={paginatedProducts}
+            products={products}
+            loading={isLoading}
             onClearFilters={clearFilters}
           />
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={handlePageChange}
-          />
+          {totalPages > 1 && (
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={handlePageChange}
+            />
+          )}
         </div>
       </div>
     </>

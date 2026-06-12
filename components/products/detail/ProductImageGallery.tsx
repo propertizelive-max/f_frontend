@@ -1,6 +1,5 @@
 'use client'
 
-import Image from 'next/image'
 import { cn } from '@/lib/utils'
 
 type ProductImageGalleryProps = {
@@ -26,13 +25,11 @@ export default function ProductImageGallery({
       {/* Main image */}
       <div className="relative aspect-[4/5] overflow-hidden rounded-sm bg-surface group">
         {images.length > 0 ? (
-          <Image
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
             src={images[selectedIndex] ?? images[0]}
             alt={`${productName} — view ${selectedIndex + 1}`}
-            fill
-            sizes="(max-width: 768px) 100vw, 60vw"
-            className="object-cover transition-transform duration-500 group-hover:scale-105"
-            priority={selectedIndex === 0}
+            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
         ) : (
           <div className="w-full h-full bg-surface flex items-center justify-center">
@@ -41,7 +38,7 @@ export default function ProductImageGallery({
         )}
       </div>
 
-      {/* Thumbnails — hidden on mobile */}
+      {/* Thumbnails */}
       {images.length > 1 && (
         <div className="hidden md:flex gap-3">
           {visibleThumbs.map((src, i) => (
@@ -56,12 +53,11 @@ export default function ProductImageGallery({
                   : 'opacity-70 hover:opacity-100',
               )}
             >
-              <Image
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
                 src={src}
                 alt={`${productName} thumbnail ${i + 1}`}
-                fill
-                sizes="64px"
-                className="object-cover"
+                className="w-full h-full object-cover"
               />
             </button>
           ))}
@@ -70,14 +66,13 @@ export default function ProductImageGallery({
             <button
               onClick={() => onSelect(MAX_VISIBLE_THUMBS)}
               aria-label={`View ${extraCount} more images`}
-              className="relative aspect-square w-16 shrink-0 overflow-hidden rounded-sm bg-surface ring-0 hover:ring-1 hover:ring-border transition-all"
+              className="relative aspect-square w-16 shrink-0 overflow-hidden rounded-sm bg-surface hover:ring-1 hover:ring-border transition-all"
             >
-              <Image
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
                 src={images[MAX_VISIBLE_THUMBS]}
-                alt={`More images`}
-                fill
-                sizes="64px"
-                className="object-cover opacity-40"
+                alt="More images"
+                className="w-full h-full object-cover opacity-40"
               />
               <span className="absolute inset-0 flex items-center justify-center text-[11px] font-medium text-charcoal">
                 +{extraCount}

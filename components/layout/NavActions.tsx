@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation'
 import { Search, Heart, ShoppingBag, Menu, X, User } from 'lucide-react'
 import type { NavLink } from '@/types/navigation'
 import { useAuth } from '@/context/AuthContext'
-import { useCart } from '@/context/CartContext'
+import { useCartStore } from '@/store/cart.store'
 import { UserDropdown } from '@/components/auth/UserDropdown'
 
 type NavActionsProps = {
@@ -16,7 +16,7 @@ type NavActionsProps = {
 export function NavActions({ navLinks }: NavActionsProps) {
   const [menuOpen, setMenuOpen] = useState(false)
   const { isAuthenticated, isLoading, user } = useAuth()
-  const { count } = useCart()
+  const count = useCartStore((s) => s.cartCount)
   const router = useRouter()
 
   function handleCartClick() {

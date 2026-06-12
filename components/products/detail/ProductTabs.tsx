@@ -39,19 +39,39 @@ export default function ProductTabs({ product, activeTab, onTabChange }: Product
         ))}
       </div>
 
-      {/* Tab content */}
-      <div className="pt-8">
-        {activeTab === 'specs' && (
-          <SpecificationsTab specs={product.specifications} />
-        )}
-        {activeTab === 'overview' && (
-          <OverviewTab text={product.overview} />
-        )}
-        {activeTab === 'care' && (
-          <CareTab instructions={product.careInstructions} />
-        )}
-        {activeTab === 'warranty' && (
-          <WarrantyTab warranty={product.warranty} />
+      {/* Content row: tab content left, diagram right (all tabs) */}
+      <div className="pt-8 flex flex-col lg:flex-row lg:items-start gap-10 lg:gap-16">
+        {/* Tab content */}
+        <div className="flex-1 min-w-0">
+          {activeTab === 'specs' && (
+            <SpecificationsTab specs={product.specifications} />
+          )}
+          {activeTab === 'overview' && (
+            <OverviewTab text={product.overview} />
+          )}
+          {activeTab === 'care' && (
+            <CareTab instructions={product.careInstructions} />
+          )}
+          {activeTab === 'warranty' && (
+            <WarrantyTab warranty={product.warranty} />
+          )}
+        </div>
+
+        {/* Diagram image — persistent across all tabs */}
+        {product.diagramImage && (
+          <div className="lg:w-[42%] shrink-0">
+            <p className="text-[10px] uppercase tracking-[0.2em] text-muted mb-3">
+              Product Diagram
+            </p>
+            <div className="border border-border rounded-sm overflow-hidden bg-surface aspect-[4/3]">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={product.diagramImage}
+                alt={`${product.name} diagram`}
+                className="w-full h-full object-contain"
+              />
+            </div>
+          </div>
         )}
       </div>
     </div>
@@ -68,12 +88,12 @@ function SpecificationsTab({ specs }: { specs: ProductDetail['specifications'] }
     ['Length / Depth', specs.length],
   ]
 
-  if (Object.values(specs).every((v) => !v)) {
+  if (Object.values(specs).every((v) => !v || v === '—')) {
     return <p className="text-sm text-muted">No specifications available.</p>
   }
 
   return (
-    <table className="w-full max-w-lg text-sm">
+    <table className="w-full text-sm">
       <tbody>
         {rows.map(([attr, val]) => (
           <tr key={attr} className="border-b border-border last:border-0">
@@ -90,7 +110,7 @@ function SpecificationsTab({ specs }: { specs: ProductDetail['specifications'] }
 
 function OverviewTab({ text }: { text: string }) {
   return (
-    <p className="text-sm text-charcoal leading-relaxed max-w-2xl">{text}</p>
+    <p className="text-sm text-charcoal leading-relaxed">{text}</p>
   )
 }
 
@@ -99,7 +119,7 @@ function CareTab({ instructions }: { instructions: string[] }) {
     return <p className="text-sm text-muted">No care instructions available.</p>
   }
   return (
-    <ul className="space-y-2 max-w-2xl">
+    <ul className="space-y-2">
       {instructions.map((item, i) => (
         <li key={i} className="flex items-start gap-3 text-sm text-charcoal leading-relaxed">
           <span className="w-1 h-1 rounded-full bg-accent mt-2 shrink-0" />
@@ -112,7 +132,7 @@ function CareTab({ instructions }: { instructions: string[] }) {
 
 function WarrantyTab({ warranty }: { warranty: ProductDetail['warranty'] }) {
   return (
-    <div className="space-y-6 max-w-lg text-sm text-charcoal">
+    <div className="space-y-6 text-sm text-charcoal">
       <div className="space-y-1">
         <p className="text-[10px] uppercase tracking-[0.15em] text-muted">Warranty Period</p>
         <p className="font-medium">{warranty.period}</p>

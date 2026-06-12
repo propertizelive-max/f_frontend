@@ -2,9 +2,8 @@ import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
 import { Container } from '@/components/layout/Container'
 import { SectionHeading } from '@/components/layout/SectionHeading'
-import { ProductCard } from '@/components/products/ProductCard'
-import { CATEGORIES } from '@/data/categories'
-import { NEW_ARRIVALS } from '@/data/products'
+import { HomeCategoriesSection } from '@/components/home/HomeCategoriesSection'
+import { HomeNewArrivalsSection } from '@/components/home/HomeNewArrivalsSection'
 
 export default function HomePage() {
   return (
@@ -45,23 +44,7 @@ export default function HomePage() {
       {/* ── Categories ─────────────────────────────────────────── */}
       <Container as="section" className="py-20">
         <SectionHeading title="Category" align="center" />
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-x-5 gap-y-8">
-          {CATEGORIES.map((cat) => (
-            <Link key={cat.slug} href={`/products?category=${cat.slug}`} className="group cursor-pointer">
-              <div className="overflow-hidden rounded-xl bg-surface aspect-square">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={cat.image}
-                  alt={cat.label}
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                />
-              </div>
-              <p className="mt-2.5 text-center text-[10px] uppercase tracking-[0.2em] font-medium text-charcoal">
-                {cat.label}
-              </p>
-            </Link>
-          ))}
-        </div>
+        <HomeCategoriesSection />
       </Container>
 
       {/* ── New Arrivals ────────────────────────────────────────── */}
@@ -78,11 +61,7 @@ export default function HomePage() {
             </Link>
           }
         />
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
-          {NEW_ARRIVALS.map((product) => (
-            <ProductCard key={product.id} {...product} />
-          ))}
-        </div>
+        <HomeNewArrivalsSection />
       </Container>
     </>
   )

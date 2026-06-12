@@ -9,10 +9,20 @@ import { CartItemRow } from './CartItemRow'
 import { CouponInput } from './CouponInput'
 
 export function CartReview() {
-  const { items, count } = useCart()
+  const { items, count, isLoading } = useCart()
   const { goToStep } = useCheckout()
 
-  const hasOutOfStock = false
+  const hasOutOfStock = items.some((item) => item.notPurchasable)
+
+  if (isLoading) {
+    return (
+      <div className="space-y-4">
+        {[1, 2].map((i) => (
+          <div key={i} className="h-28 bg-surface animate-pulse rounded-sm" />
+        ))}
+      </div>
+    )
+  }
 
   if (items.length === 0) {
     return (

@@ -1,9 +1,9 @@
 import { ProductCard } from '@/components/products/ProductCard'
 import { SkeletonCard } from '@/components/ui/SkeletonCard'
-import type { ProductListing } from '@/types/product'
+import type { ProductCardData } from '@/types/product'
 
 type ProductGridProps = {
-  products: ProductListing[]
+  products: ProductCardData[]
   loading?: boolean
   onClearFilters?: () => void
 }

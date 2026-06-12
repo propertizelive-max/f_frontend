@@ -1,6 +1,5 @@
 'use client'
 
-import Image from 'next/image'
 import { ShieldCheck, Award } from 'lucide-react'
 import { useCart } from '@/context/CartContext'
 import { formatPrice } from '@/lib/utils'
@@ -20,14 +19,9 @@ export function OrderSummary({ showItems = false }: Props) {
         <div className="mb-5 pb-5 border-b border-border space-y-4">
           {items.map((item) => (
             <div key={item.productId} className="flex gap-3">
-              <div className="relative w-14 h-14 shrink-0 bg-surface">
-                <Image
-                  src={item.image}
-                  alt={item.name}
-                  fill
-                  className="object-cover"
-                  sizes="56px"
-                />
+              <div className="w-14 h-14 shrink-0 bg-surface overflow-hidden">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-xs font-medium text-charcoal leading-snug line-clamp-2">{item.name}</p>

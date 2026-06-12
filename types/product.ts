@@ -70,6 +70,8 @@ export interface ProductSpecifications {
 
 export interface ProductDetail extends Product {
   originalPrice?: number
+  categoryId?: string
+  diagramImage?: string
   colors: ProductColor[]
   variants: ProductVariantOption[]
   specifications: ProductSpecifications

@@ -2,14 +2,15 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { useQueryClient } from '@tanstack/react-query'
 import { MapPin, ShieldCheck, Edit2 } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { useCart } from '@/context/CartContext'
 import { useCheckout } from '@/context/CheckoutContext'
-import { useAuth } from '@/context/AuthContext'
 import { placeOrder } from '@/services/orderService'
 import { toast } from '@/hooks/useToast'
 import { formatPrice, cn } from '@/lib/utils'
+import type { PaymentMethod } from '@/types/api'
 
 const PURCHASE_REASONS = [
   'New Home',
@@ -21,11 +22,13 @@ const PURCHASE_REASONS = [
 
 export function OrderConfirmation() {
   const router = useRouter()
-  const { items, mrp, discount, coupon, couponDiscount, deliveryCharge, total, clearCart } = useCart()
+  const qc = useQueryClient()
+  const { items, mrp, discount, coupon, couponDiscount, deliveryCharge, total } = useCart()
   const { formData, goToStep, setOrderId, resetCheckout } = useCheckout()
 
   const [serviceLift, setServiceLift] = useState<'available' | 'unavailable' | null>(null)
   const [purchaseReason, setPurchaseReason] = useState<string>('')
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('COD')
   const [loading, setLoading] = useState(false)
 
   async function handlePlaceOrder() {
@@ -46,7 +49,7 @@ export function OrderConfirmation() {
       state: formData.state!,
       zipCode: formData.zipCode!,
       phoneNumber: formData.phoneNumber!,
-      paymentMethod: 'COD',
+      paymentMethod,
     })
     setLoading(false)
 
@@ -55,10 +58,12 @@ export function OrderConfirmation() {
       return
     }
 
-    const orderId = result.data.orderId
+    const orderId = result.data.id
     setOrderId(orderId)
-    clearCart()
     resetCheckout()
+    // Backend clears cart on checkout — invalidate so CartContext refetches empty cart
+    qc.invalidateQueries({ queryKey: ['cart'] })
+    qc.invalidateQueries({ queryKey: ['orders'] })
     router.push(`/order-success?orderId=${orderId}`)
   }
 
@@ -213,10 +218,25 @@ export function OrderConfirmation() {
         <h2 className="text-sm font-semibold uppercase tracking-[0.12em] text-charcoal mb-4">
           Payment Method
         </h2>
-        <label className="flex items-center gap-3 cursor-pointer">
-          <input type="radio" checked readOnly className="accent-accent" />
-          <span className="text-sm text-charcoal">Cash on Delivery (COD)</span>
-        </label>
+        <div className="space-y-3">
+          {([
+            { value: 'COD',    label: 'Cash on Delivery (COD)' },
+            { value: 'UPI',    label: 'UPI' },
+            { value: 'ONLINE', label: 'Online Payment' },
+          ] as const).map(({ value, label }) => (
+            <label key={value} className="flex items-center gap-3 cursor-pointer">
+              <input
+                type="radio"
+                name="paymentMethod"
+                value={value}
+                checked={paymentMethod === value}
+                onChange={() => setPaymentMethod(value)}
+                className="accent-accent"
+              />
+              <span className="text-sm text-charcoal">{label}</span>
+            </label>
+          ))}
+        </div>
       </section>
 
       <Button

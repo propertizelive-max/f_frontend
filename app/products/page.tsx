@@ -1,3 +1,4 @@
+import { Suspense } from 'react'
 import type { Metadata } from 'next'
 import { ProductsClient } from '@/components/products/ProductsClient'
 import { EditorialSection } from '@/components/shared/EditorialSection'
@@ -27,7 +28,9 @@ export default function ProductsPage() {
       </section>
 
       {/* ── Products ─────────────────────────────────────────────── */}
-      <ProductsClient />
+      <Suspense>
+        <ProductsClient />
+      </Suspense>
 
       {/* ── Editorial ────────────────────────────────────────────── */}
       <EditorialSection />

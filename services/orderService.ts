@@ -1,28 +1,18 @@
-import type { ApiResponse } from '@/services/api'
-import type { OrderPayload, OrderResponse } from '@/types/checkout'
+import { ordersApi, type CheckoutPayload } from '@/features/orders/services/orders.api'
+import type { ApiOrder } from '@/types/api'
 
-const BASE = process.env.NEXT_PUBLIC_API_URL ?? ''
+type OrderResult = { ok: true; data: ApiOrder } | { ok: false; error: string }
 
-export async function placeOrder(payload: OrderPayload): Promise<ApiResponse<OrderResponse>> {
+export async function placeOrder(payload: CheckoutPayload): Promise<OrderResult> {
   try {
-    const token = typeof window !== 'undefined' ? localStorage.getItem('nh_access_token') : null
-    const res = await fetch(`${BASE}/orders/checkout`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        ...(token ? { Authorization: `Bearer ${token}` } : {}),
-      },
-      body: JSON.stringify(payload),
-    })
-
-    const json = await res.json()
-
-    if (!res.ok) {
-      return { ok: false, error: json.message ?? 'Order placement failed' }
-    }
-
-    return { ok: true, data: json as OrderResponse }
-  } catch (err) {
-    return { ok: false, error: err instanceof Error ? err.message : 'Network error' }
+    const data = await ordersApi.checkout(payload)
+    return { ok: true, data }
+  } catch (err: unknown) {
+    const axiosErr = err as { response?: { data?: { message?: string | string[] } } }
+    const msg = Array.isArray(axiosErr.response?.data?.message)
+      ? axiosErr.response!.data!.message!.join('. ')
+      : axiosErr.response?.data?.message ??
+        (err instanceof Error ? err.message : 'Order placement failed')
+    return { ok: false, error: msg }
   }
 }

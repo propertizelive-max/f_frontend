@@ -1,29 +1,11 @@
-export interface User {
-  id: string
-  name: string
-  email: string
-  avatar?: string
-}
+export type { User, AuthTokens, LoginCredentials, RegisterPayload, AuthResponse } from '@/types/auth.types'
 
 export interface AuthState {
   isAuthenticated: boolean
-  user: User | null
+  user: import('@/types/auth.types').User | null
   accessToken: string | null
   isLoading: boolean
 }
 
-export interface LoginRequest {
-  email: string
-  password: string
-}
-
-export interface RegisterRequest {
-  name: string
-  email: string
-  password: string
-}
-
-export interface AuthResponse {
-  accessToken: string
-  user: User
-}
+export type LoginRequest = import('@/types/auth.types').LoginCredentials
+export type RegisterRequest = import('@/types/auth.types').RegisterPayload

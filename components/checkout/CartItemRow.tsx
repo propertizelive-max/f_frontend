@@ -1,6 +1,5 @@
 'use client'
 
-import Image from 'next/image'
 import { Trash2, Heart, Minus, Plus } from 'lucide-react'
 import { useCart } from '@/context/CartContext'
 import { formatPrice } from '@/lib/utils'
@@ -18,14 +17,9 @@ export function CartItemRow({ item }: Props) {
 
   return (
     <div className="flex gap-4 py-5 border-b border-border last:border-0">
-      <div className="relative w-24 h-24 shrink-0 bg-surface overflow-hidden">
-        <Image
-          src={item.image}
-          alt={item.name}
-          fill
-          className="object-cover"
-          sizes="96px"
-        />
+      <div className="w-24 h-24 shrink-0 bg-surface overflow-hidden">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
       </div>
 
       <div className="flex-1 min-w-0">
@@ -55,11 +49,18 @@ export function CartItemRow({ item }: Props) {
           </div>
         </div>
 
+        {item.notPurchasable && (
+          <p className="text-[10px] text-red-500 uppercase tracking-wider mt-1">
+            No longer available — please remove to proceed
+          </p>
+        )}
+
         <div className="flex items-center justify-between mt-3">
           <div className="flex items-center gap-0">
             <button
               onClick={() => updateQty(item.productId, item.quantity - 1)}
-              className="w-8 h-8 flex items-center justify-center border border-border hover:border-charcoal text-charcoal transition-colors"
+              disabled={item.notPurchasable}
+              className="w-8 h-8 flex items-center justify-center border border-border hover:border-charcoal text-charcoal transition-colors disabled:opacity-40 disabled:pointer-events-none"
               aria-label="Decrease quantity"
             >
               <Minus size={12} />
@@ -69,12 +70,12 @@ export function CartItemRow({ item }: Props) {
             </span>
             <button
               onClick={() => updateQty(item.productId, item.quantity + 1)}
-              className="w-8 h-8 flex items-center justify-center border border-border hover:border-charcoal text-charcoal transition-colors"
+              disabled={item.notPurchasable}
+              className="w-8 h-8 flex items-center justify-center border border-border hover:border-charcoal text-charcoal transition-colors disabled:opacity-40 disabled:pointer-events-none"
               aria-label="Increase quantity"
             >
               <Plus size={12} />
             </button>
-            <p className="ml-3 text-[10px] text-accent uppercase tracking-wider">Limited-Time Deal</p>
           </div>
 
           <div className="flex items-center gap-4">
