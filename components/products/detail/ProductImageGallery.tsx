@@ -23,7 +23,7 @@ export default function ProductImageGallery({
   return (
     <div className="flex flex-col gap-4">
       {/* Main image */}
-      <div className="relative aspect-[4/5] overflow-hidden rounded-sm bg-surface group">
+      <div className="relative aspect-[4/3]overflow-hidden rounded-sm bg-surface group">
         {images.length > 0 ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img

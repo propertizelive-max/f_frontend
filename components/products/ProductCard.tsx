@@ -16,7 +16,7 @@ export function ProductCard({ id, slug, name, price, image, subtitle, isNew, cla
 
   return (
     <article className={cn('group', className)}>
-      <div className="relative overflow-hidden rounded-xl bg-surface aspect-[3/4]">
+      <div className="relative overflow-hidden rounded-xl bg-surface aspect-[4/3]">
         <Link href={`/products/${slug}`} aria-label={name}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img

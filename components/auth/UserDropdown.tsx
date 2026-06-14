@@ -83,5 +83,5 @@ export function UserDropdown() {
 const MENU_ITEMS = [
   { label: 'My Profile', href: '/profile' },
   { label: 'My Orders', href: '/orders' },
-  { label: 'My Cart', href: '/cart' },
+  // { label: 'My Cart', href: '/cart' },
 ]

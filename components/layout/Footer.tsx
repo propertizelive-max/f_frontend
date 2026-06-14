@@ -31,21 +31,22 @@ function PinterestIcon() {
 
 export function Footer() {
   return (
-    <footer className="bg-charcoal text-white">
-      <div className="max-w-[1440px] mx-auto px-6 lg:px-14 pt-16 pb-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
+    <footer className=" bg-[#EEEEEC] text-black">
+      <div className="max-w-[1440px] mx-auto px-6 lg:px-14 pt-16 pb-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-10">
 
         {/* Brand */}
         <div>
           <p className="font-display text-[11px] font-semibold tracking-[0.25em] uppercase mb-4">
             {SITE.name}
           </p>
-          <p className="text-sm text-white/55 leading-relaxed">{SITE.tagline}</p>
+          {/* <p className="text-sm text-black/55 leading-relaxed">{SITE.tagline}</p> */}
+          <p className="text-sm text-black/55 leading-relaxed">{SITE.tagline}</p>
         </div>
 
         {/* Link columns */}
         {FOOTER_LINKS.map((col) => (
           <div key={col.heading}>
-            <p className="text-[10px] uppercase tracking-[0.2em] text-white/45 mb-5">
+            <p className="text-[10px] uppercase tracking-[0.2em] text-black/45 mb-5">
               {col.heading}
             </p>
             <ul className="space-y-2.5">
@@ -53,7 +54,7 @@ export function Footer() {
                 <li key={link.label}>
                   <Link
                     href={link.href}
-                    className="text-sm text-white/65 hover:text-white transition-colors"
+                    className="text-sm text-black/65 hover:text-black transition-colors"
                   >
                     {link.label}
                   </Link>
@@ -65,26 +66,26 @@ export function Footer() {
 
         {/* Newsletter */}
         <div>
-          <p className="text-[10px] uppercase tracking-[0.2em] text-white/45 mb-5">
+          <p className="text-[10px] uppercase tracking-[0.2em] text-black/45 mb-5">
             Join the Hearth
           </p>
-          <p className="text-sm text-white/55 mb-5 leading-relaxed">
+          <p className="text-sm text-black/55 mb-5 leading-relaxed">
             Design inspiration and exclusive offers, delivered to your inbox.
           </p>
           <NewsletterForm />
         </div>
       </div>
 
-      <div className="border-t border-white/10">
+      <div className="border-t border-black/10">
         <div className="max-w-[1440px] mx-auto px-6 lg:px-14 py-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-[11px] text-white/35">{SITE.copyright}</p>
+          <p className="text-[11px] text-black/35">{SITE.copyright}</p>
           <div className="flex items-center gap-5">
             <Link
               href={SOCIAL_LINKS.instagram}
               aria-label="Instagram"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-white/40 hover:text-white transition-colors"
+              className="text-black/40 hover:text-black transition-colors"
             >
               <InstagramIcon />
             </Link>
@@ -93,7 +94,7 @@ export function Footer() {
               aria-label="Pinterest"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-white/40 hover:text-white transition-colors"
+              className="text-black/40 hover:text-black transition-colors"
             >
               <PinterestIcon />
             </Link>
@@ -102,7 +103,7 @@ export function Footer() {
               aria-label="Facebook"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-white/40 hover:text-white transition-colors"
+              className="text-black/40 hover:text-black transition-colors"
             >
               <FacebookIcon />
             </Link>

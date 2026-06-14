@@ -26,18 +26,18 @@ export function NavActions({ navLinks }: NavActionsProps) {
   return (
     <>
       <div className="flex items-center gap-4 text-charcoal">
-        <button
+        {/* <button
           aria-label="Search"
           className="hover:text-accent transition-colors cursor-pointer"
         >
           <Search size={18} />
-        </button>
-        <button
+        </button> */}
+        {/* <button
           aria-label="Wishlist"
           className="hover:text-accent transition-colors cursor-pointer"
         >
           <Heart size={18} />
-        </button>
+        </button>  */}
         <button
           aria-label={`Cart${count > 0 ? `, ${count} items` : ''}`}
           onClick={handleCartClick}

@@ -1,10 +1,10 @@
 import type { NavLink, FooterColumn } from '@/types/navigation'
 
 export const NAV_LINKS: NavLink[] = [
-  { label: 'Home', href: '/shop' },
-  { label: 'Categories', href: '/collections' },
-  { label: 'Products', href: '/sustainability' },
-  { label: 'About', href: '/journal' },
+  { label: 'Home', href: '/' },
+  { label: 'Categories', href: '/categories' },
+  { label: 'Products', href: '/products' },
+  { label: 'About', href: '/about' },
 ]
 
 export const FOOTER_LINKS: FooterColumn[] = [
@@ -23,8 +23,16 @@ export const FOOTER_LINKS: FooterColumn[] = [
     links: [
       { label: 'FAQ', href: '/faq' },
       { label: 'Shipping & Delivery', href: '/shipping' },
-      { label: 'Returns', href: '/returns' },
+      { label: 'Return Policy', href: '/return-policy' },
       { label: 'Contact Us', href: '/contact' },
+    ],
+  },
+  {
+    heading: 'Company',
+    links: [
+      { label: 'About Us', href: '/about' },
+      { label: 'Privacy Policy', href: '/privacy-policy' },
+      { label: 'Terms & Conditions', href: '/terms' },
     ],
   },
 ]

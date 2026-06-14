@@ -13,7 +13,7 @@ export default function ProductsPage() {
   return (
     <>
       {/* ── Hero ─────────────────────────────────────────────────── */}
-      <section className="bg-cream text-center py-20 lg:py-28">
+      {/* <section className="bg-cream text-center py-20 lg:py-28">
         <div className="max-w-[1440px] mx-auto px-6 lg:px-14">
           <span className="block text-[10px] font-semibold uppercase tracking-[0.35em] text-accent mb-5">
             Collections
@@ -25,7 +25,7 @@ export default function ProductsPage() {
             Crafted for rest. Designed for life.
           </p>
         </div>
-      </section>
+      </section> */}
 
       {/* ── Products ─────────────────────────────────────────────── */}
       <Suspense>
@@ -33,7 +33,7 @@ export default function ProductsPage() {
       </Suspense>
 
       {/* ── Editorial ────────────────────────────────────────────── */}
-      <EditorialSection />
+      {/* <EditorialSection /> */}
     </>
   )
 }

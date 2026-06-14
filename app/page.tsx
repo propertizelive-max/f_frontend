@@ -4,6 +4,7 @@ import { Container } from '@/components/layout/Container'
 import { SectionHeading } from '@/components/layout/SectionHeading'
 import { HomeCategoriesSection } from '@/components/home/HomeCategoriesSection'
 import { HomeNewArrivalsSection } from '@/components/home/HomeNewArrivalsSection'
+import { HomeFAQSection } from '@/components/home/HomeFAQSection'
 
 export default function HomePage() {
   return (
@@ -33,7 +34,7 @@ export default function HomePage() {
         <div className="hidden lg:block absolute right-0 top-0 bottom-0 w-[60%]">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="https://picsum.photos/seed/amber-velvet-sofa/1000/900"
+            src="https://5.imimg.com/data5/SELLER/Default/2025/1/480773465/OG/GH/OY/225975614/two-seater-sofa-500x500.webp"
             alt="Amber velvet sofa in a Scandinavian living room"
             className="w-full h-full object-cover"
           />
@@ -43,7 +44,18 @@ export default function HomePage() {
 
       {/* ── Categories ─────────────────────────────────────────── */}
       <Container as="section" className="py-20">
-        <SectionHeading title="Category" align="center" />
+        <SectionHeading title="Category" align="center"
+          action={
+            <Link
+              href="/categories"
+              className="flex items-center gap-1.5 text-sm text-muted hover:text-accent transition-colors"
+            >
+              View All Categories
+              <ArrowRight size={14} />
+            </Link>
+          }
+
+        />
         <HomeCategoriesSection />
       </Container>
 
@@ -63,6 +75,27 @@ export default function HomePage() {
         />
         <HomeNewArrivalsSection />
       </Container>
+
+      {/* ── FAQ ─────────────────────────────────────────────────── */}
+      <section className="bg-surface py-20">
+        <Container>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
+            <div>
+              <span className="block text-[10px] uppercase tracking-[0.25em] text-accent mb-4">
+                Common Questions
+              </span>
+              <h2 className="font-display text-4xl font-medium text-charcoal leading-snug mb-5">
+                Everything You<br />
+                <span className="italic">Need to Know</span>
+              </h2>
+              <p className="text-sm text-muted leading-loose max-w-sm">
+                From materials and delivery to returns and care — answers to the questions our customers ask most.
+              </p>
+            </div>
+            <HomeFAQSection />
+          </div>
+        </Container>
+      </section>
     </>
   )
 }

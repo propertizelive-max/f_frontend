@@ -60,6 +60,11 @@ export function ProductsClient() {
 
   const { data, isLoading } = useProducts(buildApiParams(filters, currentPage, categoryId))
 
+  // test line start 
+  console.log('PRODUCT PAGE RESPONSE', data)
+  console.log('PRODUCT PAGE PRODUCTS', data?.data)
+  //  test line end
+
   const products = (data?.data ?? []).map(apiProductToCard)
   const totalPages = data ? Math.ceil(data.total / ITEMS_PER_PAGE) : 0
 
