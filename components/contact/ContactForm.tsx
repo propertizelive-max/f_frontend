@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { Input } from '@/components/ui/Input'
 import { Button } from '@/components/ui/Button'
+import apiClient from '@/lib/api/axios'
 
 type FormState = {
   fullName: string
@@ -62,10 +63,23 @@ export function ContactForm() {
       return
     }
     setLoading(true)
-    // Simulate network delay; replace with actual API call when endpoint is ready
-    await new Promise((r) => setTimeout(r, 1200))
-    setLoading(false)
-    setSubmitted(true)
+    try {
+      await apiClient.post('/contact', {
+        fullName: form.fullName,
+        email: form.email,
+        phoneNumber: form.phone || undefined,
+        subject: form.subject,
+        message: form.message,
+      })
+      setSubmitted(true)
+    } catch (err: unknown) {
+      const msg =
+        (err as { response?: { data?: { message?: string } } })?.response?.data?.message ??
+        'Something went wrong. Please try again.'
+      setErrors({ message: msg })
+    } finally {
+      setLoading(false)
+    }
   }
 
   if (submitted) {
