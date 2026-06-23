@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
-const PUBLIC_AUTH_ROUTES = ['/login', '/register', '/auth/callback', '/forgot-password']
+const PUBLIC_AUTH_ROUTES = ['/login', '/register', '/forgot-password']
 
 const PROTECTED = ['/account', '/orders', '/wishlist', '/checkout', '/addresses', '/profile']
 
@@ -35,7 +35,6 @@ export const config = {
     '/profile/:path*',
     '/login',
     '/register',
-    '/auth/callback',
     '/forgot-password',
   ],
 }

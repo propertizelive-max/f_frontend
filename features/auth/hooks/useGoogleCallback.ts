@@ -10,13 +10,25 @@ export function useGoogleCallback() {
   const setUser = useAuthStore((s) => s.setUser)
 
   useEffect(() => {
+    console.log('GOOGLE CALLBACK RUNNING')
     authApi
       .getProfile()
       .then((user) => {
+
+
+        console.log('GOOGLE USER', user)
+
         setUser(user)
+
+
+        console.log(
+          'AUTH STORAGE',
+          localStorage.getItem('auth-storage')
+        )
         router.replace('/')
       })
-      .catch(() => {
+      .catch((err) => {
+        console.error('GOOGLE CALLBACK ERROR', err)
         router.replace('/login')
       })
   }, [setUser, router])

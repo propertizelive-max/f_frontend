@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { useRegister } from '@/features/auth/hooks/useRegister'
 import { GoogleLoginButton } from '@/features/auth/components/GoogleLoginButton'
-import { extractApiErrorMessage } from '@/lib/api/error'
+import { extractAuthErrorMessage } from '@/lib/api/error'
 import { validateEmail, validateFullName, validateRegisterPassword } from '@/lib/validation'
 
 type RegisterFormProps = {
@@ -50,7 +50,7 @@ export function RegisterForm({ mode = 'page', onSuccess, onSwitchToLogin }: Regi
     e.preventDefault()
     if (!validate()) return
     register(
-      { name, email, password, role: 'USER' },
+      { name, email, password },
       {
         onSuccess: () => {
           if (onSuccess) {
@@ -63,7 +63,7 @@ export function RegisterForm({ mode = 'page', onSuccess, onSwitchToLogin }: Regi
     )
   }
 
-  const formError = mutationError ? extractApiErrorMessage(mutationError) : null
+  const formError = mutationError ? extractAuthErrorMessage(mutationError) : null
 
   return (
     <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-5">

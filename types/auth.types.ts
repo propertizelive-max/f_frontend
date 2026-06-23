@@ -13,24 +13,30 @@ export interface RegisterPayload {
   name: string
   email: string
   password: string
-  role: 'USER'
 }
 
 export interface RegisterResponse {
   Message: string
 }
 
-// Legacy/unused — kept for backward compat with store/index.ts re-exports
-export interface AuthTokens {
-  accessToken: string
-  refreshToken: string
-}
-export interface LoginCredentials {
+export interface LoginPayload {
   email: string
   password: string
 }
-export interface AuthResponse {
-  user: User
-  accessToken: string
-  refreshToken: string
+
+export interface LoginResponse {
+  access_token: string
+}
+
+export interface ForgotPasswordPayload {
+  email: string
+}
+
+export interface ResetPasswordPayload {
+  token: string
+  newPassword: string
+}
+
+export interface MessageResponse {
+  message: string
 }

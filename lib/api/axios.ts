@@ -17,7 +17,7 @@ apiClient.interceptors.response.use(
       useAuthStore.getState().clearAuth()
       // Only force re-auth if the user was logged in — not for background/silent calls
       if (wasAuthenticated) {
-        window.location.href = `${env.API_BASE_URL}/auth/google`
+        window.location.href = '/login'
       }
     }
     return Promise.reject(error)
